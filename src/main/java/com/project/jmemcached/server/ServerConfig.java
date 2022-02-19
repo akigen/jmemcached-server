@@ -6,7 +6,7 @@ import com.project.jmemcached.protocol.ResponseConverter;
 import java.net.Socket;
 import java.util.concurrent.ThreadFactory;
 
-public interface ServerConfig {
+public interface ServerConfig extends AutoCloseable {
 
     RequestConverter getRequestConverter();
 
