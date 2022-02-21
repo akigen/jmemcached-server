@@ -31,7 +31,7 @@ class DefaultServer implements Server {
         this.mainServerThread = createMainServerThread(createServerRunnable());
     }
 
-    protected ServerSocket createServerSocket(){
+    protected ServerSocket createServerSocket() {
         try {
             ServerSocket serverSocket = new ServerSocket(serverConfig.getServerPort());
             serverSocket.setReuseAddress(true);
@@ -41,7 +41,7 @@ class DefaultServer implements Server {
         }
     }
 
-    protected ExecutorService createExecutorService(){
+    protected ExecutorService createExecutorService() {
         ThreadFactory threadFactory = serverConfig.getWorkerThreadFactory();
         int initThreadCount = serverConfig.getInitThreadCount();
         int maxThreadCount = serverConfig.getMaxThreadCount();
@@ -58,7 +58,7 @@ class DefaultServer implements Server {
         return th;
     }
 
-    protected Runnable createServerRunnable(){
+    protected Runnable createServerRunnable() {
         return new Runnable() {
             @Override
             public void run() {
@@ -73,7 +73,7 @@ class DefaultServer implements Server {
                             clientSocket.close();
                         }
                     } catch (IOException e) {
-                        if(!serverSocket.isClosed()) {
+                        if (!serverSocket.isClosed()) {
                             LOGGER.error("Can't accept client socket: " + e.getMessage(), e);
                         }
                         destroyJMemcachedServer();
@@ -84,18 +84,18 @@ class DefaultServer implements Server {
         };
     }
 
-    protected Thread getShutdownHook(){
+    protected Thread getShutdownHook() {
         return new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!serverStopped) {
+                if (!serverStopped) {
                     destroyJMemcachedServer();
                 }
             }
         }, "ShutdownHook");
     }
 
-    protected void destroyJMemcachedServer(){
+    protected void destroyJMemcachedServer() {
         try {
             serverConfig.close();
         } catch (Exception e) {
@@ -108,12 +108,12 @@ class DefaultServer implements Server {
 
     @Override
     public void start() {
-        if(mainServerThread.getState() != Thread.State.NEW) {
+        if (mainServerThread.getState() != Thread.State.NEW) {
             throw new JMemcachedException("Current JMemcached server already started or stopped! Please create a new server instance");
         }
         Runtime.getRuntime().addShutdownHook(getShutdownHook());
         mainServerThread.start();
-        LOGGER.info("Server started: "+serverConfig);
+        LOGGER.info("Server started: " + serverConfig);
     }
 
     @Override
